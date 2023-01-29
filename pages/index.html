@@ -1,0 +1,67 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-xxl-7 mt-5 text-center">
+        <div id="content" class="mt-5">
+            <h1>{L:COUNTER}</h1>
+            <h1 id="counter" style="font-size:5em;">{VALUE}</h1>
+            <div id="edit-buttons" style="display:none;">
+                <img class="inline-image-large ms-2" role="button" aria-pressed="true" title="{L:LESS}" src="{S:DIR}media/example/less.svg" onclick="editCounter('less');" />
+                <img class="inline-image-large ms-2" role="button" aria-pressed="true" title="{L:MORE}" src="{S:DIR}media/example/more.svg" onclick="editCounter('more');" />
+            </div>
+            <div id="direct-edit" class="mt-5" style="display:none;">
+                <i>{L:SET_VALUE}</i><br />
+                <input class="form-control" style="width:30%;display:inline-block;" type="number" step="1" id="new-value" placeholder="{L:NEW_VALUE}" onkeyup="checkEnter();" />
+                <div class="btn pt-1 pb-1 mt-2 ms-2 me-2 btn-light" style="vertical-align:baseline;" role="button" aria-pressed="true" onclick="directEditCounter()">{L:MODIFY}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// Display controls if needed
+if ({ALLOW_EDIT}) {
+    $('#edit-buttons').show();
+}
+if ({ALLOW_DIRECT_EDIT}) {
+    $('#direct-edit').show();
+}
+/**
+ * Define the function called on API callback
+ * Display an error if needed or update the counter
+ * 
+ * @param {*} r The response JSON from the API
+ */
+function apiCallback(r) {
+    // Check for errors
+    if (typeof r.error !== 'undefined') {
+        notifError(r.error, '{JS:L:ERROR}');
+        return;
+    }
+    // Update the counter
+    $('#counter').html(r.value);
+}
+/**
+ * Increment or decrement the counter value
+ * 
+ * @param {*} action The action ("more" or "less")
+ */
+function editCounter(action) {
+    // Call the API
+    Api.apiRequest('example', action, {}, apiCallback);
+}
+/**
+ * Set the value of the counter
+ */
+function directEditCounter() {
+    // Get the value
+    var value = $('#new-value').val();
+    // Call the API
+    Api.apiRequest('example', 'edit', {'value': value}, apiCallback);
+}
+/**
+ * Check if ENTER has been pressed in an input
+ */
+ function checkEnter(name) {
+    if (event.key === 'Enter') {
+        directEditCounter();
+    }
+}
+</script>
