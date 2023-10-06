@@ -13,6 +13,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 -- Creates the counter table
+DROP TABLE IF EXISTS `{PREFIX}example_counter`;
 CREATE TABLE IF NOT EXISTS `{PREFIX}example_counter` (
   `value` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
